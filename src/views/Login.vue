@@ -60,7 +60,7 @@ export default {
         ...mapActions(["loginUserFirebase"]),
         ...mapMutations(["setIsLoginError"]),
         async LoginUser() {
-            const successLogin = await this.LoginUserFirebase(this.form)
+            const successLogin = await this.loginUserFirebase(this.form)
             if (successLogin && this.user != null) {
                 this.form.email = ""
                 this.form.password = ""
