@@ -1,32 +1,50 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <Header :user="user"/>
+    <v-main>
+      <router-view :user="user"/>
+    </v-main>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import Header from './components/Header.vue'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 
-#nav {
-  padding: 30px;
-}
+export default {
+  name: 'App',
+  components: {
+    Header
+  },
+  data: () => ({
+  }),
+  methods: {
+    ...mapActions(["setProductsFromFirebase"]),
+    ...mapMutations(["setUser"])
+  },
+  computed: {
+    ...mapGetters({user: "getCurrentUser"})
+  },
+  async created() {
+    if(localStorage.getItem("user")) {
+      const {uid, email, isLogin} = JSON.parse(localStorage.getItem("user"))
+      this.setUser({uid, email, isLogin})
+    }
+  },
+  mounted() {
+    this.setProductsFromFirebase()
+  },
+};
+</script>
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+<style scoped>
+  .store-name {
+    color: rgb(31, 31, 31);
+    text-decoration: none;
+    font-size: 23px;
+  }
+  .auth-button {
+    color: rgb(31, 31, 31);
+    text-decoration: none;
+  }
 </style>

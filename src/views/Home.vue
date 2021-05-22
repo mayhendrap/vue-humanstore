@@ -1,18 +1,23 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-container class="my-5">
+    <v-row>
+      <v-col v-for="product in products" :key="product.id" xs="12" sm="4" md="3">
+        <HomeProductCard :product="product" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+  import HomeProductCard from '../components/HomeProductCard.vue'
+  import { mapGetters } from 'vuex'
 
-export default {
-  name: 'Home',
-  components: {
-    HelloWorld
+  export default {
+    components: {
+      HomeProductCard
+    },
+    computed: {
+      ...mapGetters({products: "getCurrentProducts"}),
+    }
   }
-}
 </script>
