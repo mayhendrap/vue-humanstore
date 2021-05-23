@@ -13,7 +13,7 @@ const store = new Vuex.Store({
         productsQty: 0,
         totalPriceProducts: 0,
         isLoading: false,
-        loginError: '',
+        error: {email: "", password: ""},
         user: null
     },
     getters: {
@@ -24,7 +24,7 @@ const store = new Vuex.Store({
         getCurrentTotalPriceProducts: state => convertToRupiah(state.totalPriceProducts),
         getCurrentIsLoading: state => state.isLoading,
         getCurrentIsLogin: state => state.isLogin,
-        getCurrentLoginError: state => state.loginError,
+        getCurrentError: state => state.error,
         getCurrentUser: state => state.user,
     },
     mutations: { // Synchronous
@@ -71,8 +71,13 @@ const store = new Vuex.Store({
         setIsLogin(state, payload) {
             state.isLogin = payload
         },
-        setIsLoginError(state, payload) {
-            state.loginError = payload
+        setIsError(state, {email, password}) {
+            if (email || email === "") {
+                state.error.email = email
+            }
+            if (password || password === "") {
+                state.error.password = password
+            }
         },
         setUser(state, payload) {
             state.user = payload
@@ -112,13 +117,13 @@ const store = new Vuex.Store({
                     // const errorMessage = error.message;
                     console.log(errorCode);
                     if(errorCode === "auth/email-already-in-use") {
-                        state.commit("setIsLoginError", "Email already in use")
+                        state.commit("setIsError", {...state.error, email: "Email already in use"})
                     }
                     if(errorCode === "auth/invalid-email") {
-                        state.commit("setIsLoginError", "Invalid format email")
+                        state.commit("setIsError", {...state.error, email: "Invalid format email"})
                     }
                     if(errorCode === "auth/weak-password") {
-                        state.commit("setIsLoginError", "Password at least 6 character")
+                        state.commit("setIsError", {...state.error , password: "Password at least 6 character"})
                     }
                     state.commit("setIsLoading", false)
                     reject(false)
@@ -140,12 +145,15 @@ const store = new Vuex.Store({
                 })
                 .catch((error) => {
                     const errorCode = error.code;
-                    // const errorMessage = error.message;
+                    // const errorMessage = error.message
+                    if(errorCode === "auth/invalid-email") {
+                        state.commit("setIsError", {...state.error, email: "Invalid Email"})
+                    }
                     if(errorCode === "auth/user-not-found") {
-                        state.commit("setIsLoginError", "User did not found")
+                        state.commit("setIsError", {...state.error, email: "User did not found"})
                     }
                     if(errorCode === "auth/wrong-password") {
-                        state.commit("setIsLoginError", "Email or Password wrong")
+                        state.commit("setIsError", {email : "Email or Password is wrong", password: "Email or Password is wrong"})
                     }
                     state.commit("setIsLoading", false)
                     reject(false)

@@ -8,7 +8,7 @@
                     placeholder="Email"
                     type="text"
                     required
-                    :error-messages="error"
+                    :error-messages="error.email"
                     @keypress="handleInputChange"
                 ></v-text-field>
                 <v-text-field
@@ -16,7 +16,7 @@
                     placeholder="Password"
                     type="password"
                     required
-                    :error-messages="error"
+                    :error-messages="error.password"
                     @keypress="handleInputChange"
                 ></v-text-field>
                 <v-btn
@@ -54,11 +54,11 @@ export default {
         }
     }),
     computed: {
-        ...mapGetters({isLoading: "getCurrentIsLoading", error: "getCurrentLoginError", user: "getCurrentUser"}),
+        ...mapGetters({isLoading: "getCurrentIsLoading", error: "getCurrentError", user: "getCurrentUser"}),
     },
     methods: {
         ...mapActions(["loginUserFirebase"]),
-        ...mapMutations(["setIsLoginError"]),
+        ...mapMutations(["setIsError"]),
         async LoginUser() {
             const successLogin = await this.loginUserFirebase(this.form)
             if (successLogin && this.user != null) {
@@ -68,7 +68,7 @@ export default {
             }
         },
         handleInputChange() {
-            this.setIsLoginError('')
+            this.setIsError({email: "", password: ""})
         }
     }
 }
