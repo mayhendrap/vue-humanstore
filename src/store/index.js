@@ -115,7 +115,6 @@ const store = new Vuex.Store({
                 .catch((error) => {
                     const errorCode = error.code;
                     // const errorMessage = error.message;
-                    console.log(errorCode);
                     if(errorCode === "auth/email-already-in-use") {
                         state.commit("setIsError", {...state.error, email: "Email already in use"})
                     }
